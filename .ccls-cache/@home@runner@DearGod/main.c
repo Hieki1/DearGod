@@ -133,15 +133,6 @@ void normalizar_palavras(char *palavra){
   }///normaliza a palavra 
 } 
 
-int contar_palavras(){
-  int total_palavras_arquivo_dicionario=0;
-  arquivo_dicionario=fopen("dicionario.txt","r");
-    while(fscanf(arquivo_dicionario,"%s %*[^\n]", item_dicionario.palavra)!=EOF){
-      total_palavras_arquivo_dicionario++;  
-    }
-  fclose(arquivo_dicionario);
-  return (total_palavras_arquivo_dicionario);
-}
   
 void iniciar_jogo(){
   int palavra_sorteada, total_palavras_arquivo_dicionario=0;
@@ -155,7 +146,6 @@ void iniciar_jogo(){
       total_palavras_arquivo_dicionario++;    
     }
     fclose(arquivo_dicionario);
-    }
     srand(time(NULL));
     palavra_sorteada = rand() % total_palavras_arquivo_dicionario+1;
     printf("A palavra sorteda é %d", palavra_sorteada);
@@ -165,8 +155,9 @@ void iniciar_jogo(){
     }
     fclose(arquivo_dicionario);
     printf("A palavra sorteda é %s", item_jogo.palavra);
+    
   }
-
+  }
   
  
     
