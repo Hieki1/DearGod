@@ -18,6 +18,8 @@ void normalizar_palavras();
 void buscar_significado();
 void consultar_palavra();
 void iniciar_jogo();
+void exibir_forca();
+void exibir_caracteres();
 
 
 int main(void) {
@@ -133,9 +135,158 @@ void normalizar_palavras(char *palavra){
   }///normaliza a palavra 
 } 
 
+void exibir_forca(int erros,char *letras_tentadas, char *item_jogo_palavra_oculta){
+  switch (erros){
+    case 0:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||      ");
+	  printf("\n\t||      ");
+	  printf("\n\t||      ");
+	  printf("\n\t||      ");
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n"); 
+    printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    printf("Digite Uma Letra: ");
+    break;
+    case 1:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||    O ");
+	  printf("\n\t||      ");
+	  printf("\n\t||      ");
+	  printf("\n\t||      ");
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n");         
+    printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    break;
+    case 2:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||    O ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||      ");
+	  printf("\n\t||      ");
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n"); printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    break;
+    case 3:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||    O ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||   /  ");
+	  printf("\n\t||      ");
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n"); printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    break;
+    case 4:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||    O ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||   / \\ ");
+	  printf("\n\t||      "); 
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n"); printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    break;
+    case 5:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||    O ");
+	  printf("\n\t||   /| ");
+	  printf("\n\t||   / \\ ");
+	  printf("\n\t||      ");
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n"); printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    break;
+    case 6:
+    system("clear");
+    printf("\n========================================================");
+    printf("\nJogo da Forca\n");
+    printf("========================================================\n");
+	  printf("\n\t||===== ");
+	  printf("\n\t||    | ");
+	  printf("\n\t||    O ");
+	  printf("\n\t||   /|\\ ");
+	  printf("\n\t||   / \\ ");
+	  printf("\n\t||      ");
+    printf("\n\n");
+    exibir_caracteres(item_jogo_palavra_oculta);
+    printf("\n"); printf("\n========================================================\n");
+    printf("Letras Já Tentadas:");
+    exibir_caracteres(letras_tentadas);
+    printf("\n");
+    printf("========================================================\n");
+    break;
+  }
+}
+
+void exibir_caracteres(char *string){
+  for(int i=0;i<(strlen(string));i++){
+    if(string[i]!='\0'){
+      printf("\t%c",string[i]);
+    }
+  }  
+}
+
   
 void iniciar_jogo(){
-  int palavra_sorteada, total_palavras_arquivo_dicionario=0;
+  int linha_palavra_sorteada, total_palavras_arquivo_dicionario=0;
   if (verificar_existencia_de_arquivo()==0){
     printf("\nErro! O Dicionário Não Contém Nenhuma Palavra.\nRetornando para o Menu de Opções Principal.\n");
   }
@@ -146,57 +297,64 @@ void iniciar_jogo(){
     }
     fclose(arquivo_dicionario);
     srand(time(NULL));
-    palavra_sorteada = rand() % total_palavras_arquivo_dicionario+1;
-    printf("A palavra sorteda é %d\n", palavra_sorteada);
+    linha_palavra_sorteada = rand() % total_palavras_arquivo_dicionario+1;
+    printf("A palavra sorteda é %d\n", linha_palavra_sorteada);
     arquivo_dicionario = fopen("dicionario.txt","r");
-    for (int i = 0; i < palavra_sorteada; i++){
-      fscanf(arquivo_dicionario,"%s %*[^\n]", item_jogo.palavra);
+    for (int i = 0; i < linha_palavra_sorteada; i++){
+      fscanf(arquivo_dicionario,"%s %[^\n]", item_jogo.palavra,item_jogo.significado);
     }
     fclose(arquivo_dicionario);
-
-    system("clear");
-    printf("\n\t||===== ");                 /**show the HANGMAN**/
-	  printf("\n\t||    | ");
-    printf("\n\t||      ");
-    printf("\n\t||      ");
-    printf("\n\t||      ");
-    printf("\n\t||      ");
-    printf("\n\n\t");
-    
-    char *palavra_secreta[strlen(item_jogo.palavra)];
+  
+    char item_jogo_palavra_oculta[strlen(item_jogo.palavra)];
     for (int i=0;i<strlen(item_jogo.palavra);i++){
-      palavra_secreta[i]="_";
-      printf("\t%s",palavra_secreta[i]);
+      item_jogo_palavra_oculta[i]='_';
     }
 
-    int erros = 0;  
-    do{
-      printf("\nDigite uma letra: ");
-      char letra = getchar();
-      if (strstr(&letra, item_jogo.palavra) != NULL) {
-        
-      }
-      else{
-        switch (erros){
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        
+    char letras_tentadas[strlen(item_jogo_palavra_oculta)+6], letra;
+    int erros=0, acertos=0, sinaliza_erros, contador=0;
+    while(1){
+      exibir_forca(erros,letras_tentadas,item_jogo_palavra_oculta);
+      scanf(" %c",&letra);
+
+      sinaliza_erros=0;
+      for (int i=0;i<strlen(letras_tentadas);i++){
+        if(letras_tentadas[i]==letra){
+          sinaliza_erros=1;
         }
       }
-     
-    }while(erros!=5 || acerto!=0);
-    
-    
-    printf("\nA palavra sorteda é %s", item_jogo.palavra);
-    
+      if(sinaliza_erros==1){
+        printf("Erro! A Letra Já Foi Digitadas.\n");
+      }
+      else{
+        letras_tentadas[contador]=letra;
+        contador++;
+        int sinaliza_erros=1;
+        for (int i=0;i<strlen(item_jogo.palavra);i++){
+          if(item_jogo.palavra[i]==letra){
+            item_jogo_palavra_oculta[i]=letra;
+            acertos++;
+            sinaliza_erros=0;
+          }
+        }
+        if(sinaliza_erros!=0){
+          erros++;
+        }
+        if(erros==6){
+          exibir_forca(erros,letras_tentadas,item_jogo_palavra_oculta);
+          printf("Loser");
+          break;
+        }
+        else if (acertos==strlen(item_jogo.palavra)){
+          exibir_forca(erros,letras_tentadas,item_jogo_palavra_oculta);
+          printf("Você ganhou parabéns");
+          break;
+        }  
+      }
+    }
   }
-  }
+}
+    
   
- 
-    
 
 
 
