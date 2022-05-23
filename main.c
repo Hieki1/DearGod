@@ -136,7 +136,6 @@ void normalizar_palavras(char *palavra){
   
 void iniciar_jogo(){
   int palavra_sorteada, total_palavras_arquivo_dicionario=0;
-  char palavra[46];
   if (verificar_existencia_de_arquivo()==0){
     printf("\nErro! O Dicionário Não Contém Nenhuma Palavra.\nRetornando para o Menu de Opções Principal.\n");
   }
@@ -148,13 +147,50 @@ void iniciar_jogo(){
     fclose(arquivo_dicionario);
     srand(time(NULL));
     palavra_sorteada = rand() % total_palavras_arquivo_dicionario+1;
-    printf("A palavra sorteda é %d", palavra_sorteada);
+    printf("A palavra sorteda é %d\n", palavra_sorteada);
     arquivo_dicionario = fopen("dicionario.txt","r");
     for (int i = 0; i < palavra_sorteada; i++){
       fscanf(arquivo_dicionario,"%s %*[^\n]", item_jogo.palavra);
     }
     fclose(arquivo_dicionario);
-    printf("A palavra sorteda é %s", item_jogo.palavra);
+
+    system("clear");
+    printf("\n\t||===== ");                 /**show the HANGMAN**/
+	  printf("\n\t||    | ");
+    printf("\n\t||      ");
+    printf("\n\t||      ");
+    printf("\n\t||      ");
+    printf("\n\t||      ");
+    printf("\n\n\t");
+    
+    char *palavra_secreta[strlen(item_jogo.palavra)];
+    for (int i=0;i<strlen(item_jogo.palavra);i++){
+      palavra_secreta[i]="_";
+      printf("\t%s",palavra_secreta[i]);
+    }
+
+    int erros = 0;  
+    do{
+      printf("\nDigite uma letra: ");
+      char letra = getchar();
+      if (strstr(&letra, item_jogo.palavra) != NULL) {
+        
+      }
+      else{
+        switch (erros){
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        
+        }
+      }
+     
+    }while(erros!=5 || acerto!=0);
+    
+    
+    printf("\nA palavra sorteda é %s", item_jogo.palavra);
     
   }
   }
