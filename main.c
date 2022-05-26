@@ -8,8 +8,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Definição do struct dicionario possuindo dois vetores char, bem como das variáves que são desse tipo (item_cadastro, item_consulta, item_jogo, item_dicionario).
+// Definição do dicionario como strcut que possui dois vetores char (palavra e significado), bem como das variáves que são desse tipo (item_cadastro, item_consulta, item_jogo, item_dicionario).
 struct dicionario{
+// O vetor palavra foi definido como tendo 46 posições, pois a maior palavra da língua portuguesa possui essa quantidade de caracteres.
 char palavra[46];
 char significado[200];
 }item_cadastro, item_consulta, item_jogo, item_dicionario; 
@@ -103,7 +104,7 @@ int main(void) {
         iniciar_jogo(); 
         break;
 
-      // Chama a função que encerra a interação e também o loop, solicitando, assim, o encerramento da execução do programa.
+      // Encerra a interação e também o loop, solicitando, assim, o encerramento da execução do programa.
       case 4:
         break;
     }
@@ -112,66 +113,126 @@ int main(void) {
 
 
 void cadastrar_palavra(){
+  
+  // Chama a função que verifica se o arquivo do dicionário do tipo texto foi criado ou não. Caso o retorno dessa função seja 0, o que indica a inexistencia do dicionário, cria o arquivo, abrindo em modo de escrita (w). Caso contrário, abre o arquivo em modo de append (a), permitindo a adição de novas palavras sem a perda do conteúdo já existente.
   if (verificar_existencia_de_arquivo()==0){
     arquivo_dicionario=fopen("dicionario.txt","w");
   }
   else{
     arquivo_dicionario=fopen("dicionario.txt","a");
   }
+  
+  // Limpeza de qualquer informação exibida na tela. 
   system("clear");
+
+  // Exibe o cabeçalho e a mensagem solicitando a inserção da palavra para cadastro.
   printf("========================================================");
   printf("\nCadastro de Palavra\n");
   printf("========================================================");
-  
   printf("\nDigite a Nova Palavra para o Cadastro: ");
+
+  // Recebe do usuário o vetor de caracteres palavra, por meio da variável do tipo dicionário.
   fgets(item_cadastro.palavra,sizeof(item_cadastro.palavra),stdin); 
-  item_cadastro.palavra[strcspn(item_cadastro.palavra,"\n")] = 0; // pra remover o \n que fgets pega, só para meu toque não atacar
+
+  // Remove o \n (enter) registrado no vetor palavra pela função fgets, durante a etapa anterior, com o intuito de manter a formatação do arquivo do dicionário com palavra e singificado na mesma linha.
+  item_cadastro.palavra[strcspn(item_cadastro.palavra,"\n")] = 0; 
+
+  // Chama a função que normaliza ou formata o vetor palavra inserido, de modo a tornar todos os caracteres minúsculos, evitando, assim, com que palavras iguais, sejam indentificadas, a seguir, como únicas.
   normalizar_palavra(item_cadastro.palavra);
+
+  // Chama a função que verifica se a palavra existe ou não no dicionário. Caso o retorno dessa função seja 1, o que indica que o conteúdo do vetor palavra já foi registrado anteriormente, entra na condição de encerramento de cadastro para evitar duplicatas. Caso contrário prossegue com a execução normal do proceso de cadastro.
   if(verificar_existencia_da_palavra(item_cadastro.palavra)==1){
+
+    // Exibe uma mensagem de erro na cor vermelha em negrito, avisando para o usuário que a palavra digitada, exposta em vermelho em negrito e sublinhada, já está presente no arquivo de texto do dicionário.
     string_vermelha_negrito("\nErro! A Palavra: ");  
     string_vermelha_negrito_sublinhado(item_cadastro.palavra);
     string_vermelha_negrito(" Já Existe no Dicionário!\n");
+
+    // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
     retornar_menu();
   }
   else{
+
+    // Exibe uma mensagem solicitando a inserção do significado da palavra sendo cadastrada.
     printf("\nDigite o Significado da Nova Palavra para o Cadastro: ");
-    fgets(item_cadastro.significado,sizeof(item_cadastro.significado),stdin); // não removo o \n para não ter q colocar um \n no fprintf
+
+     // Recebe do usuário o vetor de caracteres significado, por meio da variável do tipo dicionário. O \n (enter) obtido com o fgets não é removido, neste momento, pois inibe a necessidade da colocação de um \n na estrutura do comando de escrita no arquivo texto, simplificando, com isso, o processo de pular linhas entre palavras diferentes que são mantidas cada qual na sua própria linha.
+    fgets(item_cadastro.significado,sizeof(item_cadastro.significado),stdin);
+
+    // Escreve no arquivo texto o vetor de caracteres palavra e significado separados por um espaço em branco.
     fprintf(arquivo_dicionario,"%s %s",item_cadastro.palavra,item_cadastro.significado);
+
+    // Fecha o arquivo de texto do dicionário.
     fclose(arquivo_dicionario);
+
+    // Exibe uma mensagem de sucesso na cor verde em negrido, avisando par o usuário que a palavra digitada, exposta em verde em negrito sublinhado, foi registrada no dicionário.
     string_verde_negrito("\nSucesso! A Palavra: ");  
     string_verde_negrito_sublinhado(item_cadastro.palavra);
     string_verde_negrito(" Foi Registrada no Dicionário!\n");
+
+        // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
     retornar_menu();
   }    
 }
 
 void consultar_palavra(){
-  
+
+  // Chama a função que verifica se o arquivo do dicionário do tipo texto foi criado ou não. Caso o retorno dessa função seja 0, o que indica a inexistencia do dicionário, entra na condição de encerramento desse processo, pois se o dicionário não existe, nenhuma palavra foi cadastrada, logo, não há o que consultar. Caso contrário prossegue com a execução normal do proceso de consulta.
   if (verificar_existencia_de_arquivo()==0){
+    
+    // Exibe uma mensagem de erro na cor vermelha em negrito, avisando para o usuário que o dicionário não contém nenhuma palavra. Isso para fins de indicação é o suficiente para o utilizador, já que o correto seria exibir uma mensagem dizendo que o dicionário não existe.
     string_vermelha_negrito("\nErro! O Dicionário Não Contém Nenhuma Palavra.\n");
+
+     // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
     retornar_menu();
   }
   else{
+    
+    // Limpeza de qualquer informação exibida na tela. 
     system("clear");
+
+     // Exibe o cabeçalho e a mensagem solicitando a inserção da palavra para consulta.
     printf("========================================================");
     printf("\nConsulta de Palavra\n");
     printf("========================================================");
     printf("\nDigite a Palavra para Consulta: ");
+
+    // Recebe do usuário o vetor de caracteres palavra, por meio da variável do tipo dicionário.
     fgets(item_consulta.palavra,sizeof(item_consulta.palavra),stdin);
+
+     // Remove o \n (enter) registrado no vetor palavra pela função fgets, durante a etapa anterior, com o intuito de realizar a consulta corretamente, evitando com que a palavra tenha um caractere a mais que pode afetar a comparação realidada com as palavra do dicionário que não o tem. Exemplo: macaco (dicionário) macaco\n (consulta) -> o programa consideraria que a palavra consultada não existe sem essa função.
     item_consulta.palavra[strcspn(item_consulta.palavra,"\n")] = 0;
-    //normalizar_palavra(item_consulta.palavra);
+
+    // Chama a função que normaliza ou formata o vetor palavra inserido, de modo a tornar todos os caracteres minúsculos, evitando, assim, com que palavras iguais, sejam indentificadas, a seguir, como únicas.
+    normalizar_palavra(item_consulta.palavra);
+
+    // Chama a função que verifica se a palavra consultada existe ou não no dicionário. Caso o retorno dessa função seja 0, o que indica que a palavra consultada não existe no arquivo,  entra na condição de encerramento da consulta. Caso contrário prossegue com a execução normal do proceso de cadastro.
     if(verificar_existencia_da_palavra(item_consulta.palavra)==0){
+      
+      // Exibe uma mensagem de erro na cor vermelha em negrito, avisando para o usuário que o dicionário não contém a palavra consulta, exibida na cor vermelha em negrito sublinado. 
       string_vermelha_negrito("\nErro! O Dicionário Não Contém a Palavra: ");
       string_vermelha_negrito_sublinhado(item_consulta.palavra);
       printf("\n");
+
+      // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
       retornar_menu();
     }
     else{
+      
+      // Abre o arquivo de texto do dicionário no modo de leitura.
       arquivo_dicionario=fopen("dicionario.txt","r");
+
+      // Realiza a leitura linha a linha até o fim do arquivo de texto do dicionário, guardando a palavra e significado encontrados.
       while(fscanf(arquivo_dicionario,"%s %[^\n]", item_dicionario.palavra, item_dicionario.significado)!=EOF){
+        
+        // Caso a comparação da palavra consultada com uma palavra extraída do dicionário seja positiva, exibe uma mensagem com o significado extraído.
         if (strcmp(item_dicionario.palavra, item_consulta.palavra)==0){
           printf("\nO Significado de \"%s\" é: %s\n", item_consulta.palavra,item_dicionario.significado);
+
+          // Fecha o arquivo de texto do dicionário.
           fclose(arquivo_dicionario);
+
+          // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
           retornar_menu();
         }
       }
@@ -180,58 +241,117 @@ void consultar_palavra(){
 } 
 
 void iniciar_jogo(){
+  
+  // Declaração de variáveis do tipo inteiro, sendo uma delas um contador (total_palavras_arquivo_dicionario).
   int linha_palavra_sorteada, total_palavras_arquivo_dicionario=0;
+
+   // Chama a função que verifica se o arquivo do dicionário do tipo texto foi criado ou não. Caso o retorno dessa função seja 0, o que indica a inexistência do dicionário, entra na condição de encerramento desse processo, pois se o dicionário não existe, nenhuma palavra foi cadastrada, logo, não há nehuma palavra para ser usada no jogo. Caso contrário prossegue com o inicio do jogo.
   if (verificar_existencia_de_arquivo()==0){
+
+    // Exibe uma mensagem de erro na cor vermelha em negrito, avisando para o usuário que o dicionário não contém nenhuma palavra.
     string_vermelha_negrito("\nErro! O Dicionário Não Contém Nenhuma Palavra.\n");
+
+    // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
     retornar_menu();
   }
   else{
+
+    // Abre o arquivo de texto do dicionário no modo de leitura.
     arquivo_dicionario=fopen("dicionario.txt","r");
+
+    // Realiza a leitura, linha a liha, até o fim do arquivo de texto do dicionário, incrementando o contador do total de palavras toda vez que o processo é executado com sucesso.
     while(fscanf(arquivo_dicionario,"%s %*[^\n]", item_dicionario.palavra)!=EOF){
       total_palavras_arquivo_dicionario++;    
     }
+
+    // Fecha o arquivo de texto do dicionário.
     fclose(arquivo_dicionario);
+
+    // Chama a função que cria seeds númericas aleatórias, definindo que o processo será realizado com base no horário do sistema.
     srand(time(NULL));
+
+    // Sorteia uma palavra aletória, limitada a quantidade de palavras do arquivo, que é, por consequência, da formatação do arquivo, também, igual a quantidade de linhas registradas. É importante mencionar que o comando utilizado realiza o sorteio seguindo a seguinte formatação: 0<=valor_sorteado<valor_máximo, logo foi necessário somar um junto da variável total_palavras_arquivo_dicionario a fim de permitir que a palavra na última linha pudesse participar também da seleção aleátoria.
     linha_palavra_sorteada = rand() % total_palavras_arquivo_dicionario+1;
+
+    // Abre o arquivo de texto do dicionário no modo de leitura.
     arquivo_dicionario = fopen("dicionario.txt","r");
+
+    // Realiza a leitura, linha a linha, do arquivo de texto do dicionário, armazenando sempre palavra e significado, até, finalmente, chegar na linha do termo sorteado.
     for (int i = 0; i < linha_palavra_sorteada; i++){
       fscanf(arquivo_dicionario,"%s %[^\n]", item_jogo.palavra,item_jogo.significado);
     }
+    
+    // Fecha o arquivo de texto do dicionário.
     fclose(arquivo_dicionario);
-  
+
+    // Declaração de um vetor de caracteres, com o tamanho da palavra que estava na linha sorteada aleátoriamente, com o propósito de indicar quais letras fazem parte ou não da palavra sorteada para o jogo da forca.
     char item_jogo_palavra_oculta[strlen(item_jogo.palavra)];
+
+    // Escrita de '-' ao longo do vetor de caracteres declarado anteriormente.
     for (int i=0;i<strlen(item_jogo.palavra);i++){
       item_jogo_palavra_oculta[i]='_';
     }
 
-    char letras_tentadas[26]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};      
+    //Declaração de um vetor de caracteres, com a quantidade de letras do alfabeto, ocupado totalmente por zeros, para armazenar as letras já tentadas pelo usuário para advinhar a plavra sorteada.
+    char letras_tentadas[26]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};   
+
+    // Declaração de uma variável do tipo char, que será usada para receber as letras inseridas pelo usuário para advinhação da palavra do jogo.
     char letra;
+
+    // Declaração de variáveis do tipo int, sendo elas: 3 contadores e 1 falg ou indicador. 
     int erros=0, acertos=0, sinaliza_erros, contador=0;
+
+    // Inicia um loop
     while(1){
+
+      // Chama a função que exibe tanto o cabeçalho do jogo quanto a imagem da forca de em função da quantidade de erros.
       exibir_forca(erros);
+
+      // Exibe o vetor que serve de indicação para as letras que fazem parte, ou não, da palavra sorteada, de maneira tabulada.
       for (int i=0;i<strlen(item_jogo.palavra);i++){
       printf("\t%c",item_jogo_palavra_oculta[i]);
       }
+      
+      // Pula uma linha na exibição.
       printf("\n"); 
+
+      // Exibe uma linha separando o conteúdo anterior (forca e indicação da palavra sorteada) do conteúdo seguinte (letras já tentadas).
       printf("\n========================================================\n");
+
+      // Exibe todas as letras já tentadas pelo usuário, sendo elas certas ou não. Para tal, só expõe as posições do vetor de caracteres que não estejam ocupadas pelos zeros inseridos na declaração da variável.
       printf("Letras Já Tentadas:");
       for (int i=0;i<26;i++){
           if(letras_tentadas[i]!='0'){
             printf("%c ",letras_tentadas[i]);
           }
       }
+      
+      // Pula uma linha na exibição.
       printf("\n");
+
+      // Exibe uma linha separando o conteúdo anterior (letras já tentadas) do conteúdo seguinte (mensagem solicitando a inserção de uma letra para a advinhação).
       printf("========================================================\n");
+
+      // Exibe uma mensagem solicitando a inserção de um caractere para a advinhação.
       printf("Digite Uma Letra: ");
+
+      // Recebe o caractere digitado pelo usuário. Neste ponto do código é válido mencionar que o espaço existente entre as aspas da esquerda e o porcentagem, dentro do comando scanf, é necessário pela natureza do replit e seu compilador que não funcionam adequadamente sem isso.
       scanf(" %c",&letra);
+
+      // Chama a função que formata o caractere inserido para minúsculo, permitindo com que a letra inserida, seja ela maiúscula ou minúscula, seja indetifica corretamente caso exista, ou não, na palavra sorteada.
       normalizar_palavra(&letra);
 
+      // Atribui valor zero para a variável que sinaliza se a letra digitada já tinha sido tentada anteriormente.
       sinaliza_erros=0;
+
+      // Compara a letra digitada aos caracteres do vetor que armazena as letras tentadas antes. Caso essa comparação seja positiva, ou seja, a letra já foi digitada, encerra a interação do e recomeça o processo, solicitando, assim, a inseração de outra letra. Caso contrário continua para a próxima etapa, que é o processo de verificação.  
       for (int i=0;i<strlen(letras_tentadas);i++){
         if(letras_tentadas[i]==letra){
           sinaliza_erros=1;
         }
       }
+
+      
       if(sinaliza_erros!=1){
         letras_tentadas[contador]=letra;
         contador++;
