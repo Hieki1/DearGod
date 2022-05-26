@@ -341,21 +341,29 @@ void iniciar_jogo(){
       // Chama a função que formata o caractere inserido para minúsculo, permitindo com que a letra inserida, seja ela maiúscula ou minúscula, seja indetifica corretamente caso exista, ou não, na palavra sorteada.
       normalizar_palavra(&letra);
 
-      // Atribui valor zero para a variável que sinaliza se a letra digitada já tinha sido tentada anteriormente.
+      // Atribui valor 0 para a variável sinalizadora.
       sinaliza_erros=0;
 
-      // Compara a letra digitada aos caracteres do vetor que armazena as letras tentadas antes. Caso essa comparação seja positiva, ou seja, a letra já foi digitada, encerra a interação do e recomeça o processo, solicitando, assim, a inseração de outra letra. Caso contrário continua para a próxima etapa, que é o processo de verificação.  
+      // Compara a letra digitada aos caracteres do vetor que armazena as letras tentadas antes. Caso essa comparação seja positiva, a letra já foi digitada, assim, há a alteração do valor da variável de sinalização. 
       for (int i=0;i<strlen(letras_tentadas);i++){
         if(letras_tentadas[i]==letra){
           sinaliza_erros=1;
         }
       }
 
-      
+      // Caso a variável sinalizadora seja 1, encerra a interação e recomeça o processo, solicitando, assim, a inseração de outra letra. Caso contrário, continua para a próxima etapa da execução.  
       if(sinaliza_erros!=1){
+        
+        // Armazena no vetor de letras tentadas, na posição dada pelo contador, a letra inserida pelo usuário, que, logicamente, ainda não tinha sido inserida. 
         letras_tentadas[contador]=letra;
+
+        // Incrementa o contador.
         contador++;
+
+        // Atribui valor 1 para a variável sinalizadora.
         int sinaliza_erros=1;
+
+        // Realiza a comparação do caractere inserido com todos os caracteres da palavra sorteada. Caso haja esse caractere na palavra sorteada, altera o caractere '-' do vetor de indicação pela letra digitada, incrementa o contador de número de acertos e atribui valor zero para a variável de sinalização. Caso contrário, apenas, incrementa o contador de número de erros.
         for (int i=0;i<strlen(item_jogo.palavra);i++){
           if(item_jogo.palavra[i]==letra){
             item_jogo_palavra_oculta[i]=letra;
@@ -366,62 +374,111 @@ void iniciar_jogo(){
         if(sinaliza_erros!=0){
           erros++;
         }
+
+        // Verifica se os erros são iguais a 6, ou seja, se o boneco foi enforcado. Caso afirmativo, executa a secção, a seguir, que finaliza o jogo.
         if(erros==6){
-          exibir_forca(erros);
-          for (int i=0;i<strlen(item_jogo.palavra);i++){
-            printf("\t%c",item_jogo_palavra_oculta[i]);
+
+         // Chama a função que exibe tanto o cabeçalho do jogo quanto a imagem da forca de em função da quantidade de erros.
+      exibir_forca(erros);
+
+      // Exibe o vetor que serve de indicação para as letras que fazem parte, ou não, da palavra sorteada, de maneira tabulada.
+      for (int i=0;i<strlen(item_jogo.palavra);i++){
+      printf("\t%c",item_jogo_palavra_oculta[i]);
+      }
+      
+      // Pula uma linha na exibição.
+      printf("\n"); 
+
+      // Exibe uma linha separando o conteúdo anterior (forca e indicação da palavra sorteada) do conteúdo seguinte (letras já tentadas).
+      printf("\n========================================================\n");
+
+      // Exibe todas as letras já tentadas pelo usuário, sendo elas certas ou não. Para tal, só expõe as posições do vetor de caracteres que não estejam ocupadas pelos zeros inseridos na declaração da variável.
+      printf("Letras Já Tentadas:");
+      for (int i=0;i<26;i++){
+          if(letras_tentadas[i]!='0'){
+            printf("%c ",letras_tentadas[i]);
           }
-          printf("\n"); 
-          printf("\n========================================================\n");
-          printf("Letras Já Tentadas:");
-          for (int i=0;i<strlen(letras_tentadas);i++){
-            if(letras_tentadas[i]!='0'){
-              printf("%c ",letras_tentadas[i]);
-            }
-          }
-          printf("\n");
-          string_vermelha_negrito("\nVocê Perdeu! O Boneco Perin Foi Enforcado!\n");
+      }
+      
+      // Pula uma linha na exibição.
+      printf("\n");
+          
+          // Exibe uma mensagem, na cor vermelha em negrito, avisando para o usuário que ele perdeu o jogo e o boneco foi enforcado. Além disso, apresenta qual era a palavra sorteada, exibida em vermelho em negrito e sublinhado, e seu significado, em vermelho e negrito.
+          string_vermelha_negrito("\nVocê Perdeu! O Boneco Foi Enforcado!\n");
           string_vermelha_negrito("\nA Palavra Secreta Era: ");
           string_vermelha_negrito_sublinhado(item_jogo.palavra);
           string_vermelha_negrito(" Que Significa: ");
           string_vermelha_negrito(item_jogo.significado);
+
+          // Pula uma linha na exibição.
           printf("\n");
+
+          // Recebe o \n (enter) aramazenado pelo buffer.
           getchar();
+
+          // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
           retornar_menu();
+
+          // Encerra o loop e, com isso, o jogo.
           break;
         }
+
+        // Verifica se os acertos são iguais ao tamanho da palavra sorteada, ou seja, se a palavra foi acertada pelo usuário. Caso afirmativo, executa a secção, a seguir, que finaliza o jogo.
         else if (acertos==strlen(item_jogo.palavra)){
+      
+          // Chama a função que exibe tanto o cabeçalho do jogo quanto a imagem da forca de em função da quantidade de erros.
           exibir_forca(erros);
+
+          // Exibe o vetor que serve de indicação para as letras que fazem parte, ou não, da palavra sorteada, de maneira tabulada.
           for (int i=0;i<strlen(item_jogo.palavra);i++){
             printf("\t%c",item_jogo_palavra_oculta[i]);
           }
+      
+          // Pula uma linha na exibição.
           printf("\n"); 
+
+          // Exibe uma linha separando o conteúdo anterior (forca e indicação da palavra sorteada) do conteúdo seguinte (letras já tentadas).
           printf("\n========================================================\n");
+
+          // Exibe todas as letras já tentadas pelo usuário, sendo elas certas ou não. Para tal, só expõe as posições do vetor de caracteres que não estejam ocupadas pelos zeros inseridos na declaração da variável.
           printf("Letras Já Tentadas:");
           for (int i=0;i<26;i++){
-             if(letras_tentadas[i]!='0'){
+            if(letras_tentadas[i]!='0'){
               printf("%c ",letras_tentadas[i]);
             }
           }
+      
+          // Pula uma linha na exibição.
           printf("\n");
-          string_verde_negrito("\nVocê Ganhou! O Boneco Perin Não Foi Enforcado!\n");
+
+           // Exibe uma mensagem, na cor verde em negrito, avisando para o usuário que ele ganhou o jogo e o boneco não foi enforcado. Além disso, apresenta qual era a palavra sorteada, exibida em verde em negrito e sublinhado, e seu significado, em verde em negrito.
+          string_verde_negrito("\nVocê Ganhou! O Boneco Não Foi Enforcado!\n");
           string_verde_negrito("\nA Palavra Secreta Era: ");
           string_verde_negrito_sublinhado(item_jogo.palavra);
           string_verde_negrito(" Que Significa: ");
           string_verde_negrito(item_jogo.significado);
+
+          // Pula uma linha na exibição.
           printf("\n");
+
+          // Recebe o \n (enter) aramazenado pelo buffer.
           getchar();
+          
+          // Chama a função que solicita e aguarda o pressionamento de qualquer caractere para retomar a execução do programa e, com isso, retornar para o menu principal.
           retornar_menu();
+
+          // Encerra o loop e, com isso, o jogo.
           break;
         }  
       }
     }
-    
   }
 }
 
 
 int verificar_existencia_de_arquivo(){
+  
+  //Tenta realizar a abertura do arquivo do dicionário (dicionario.txt) no modo de leitura (r). Caso não seja possível retorna 0, o contrário retorna 1.
   if(fopen("dicionario.txt","r")==NULL){
     return 0;
   }
@@ -430,28 +487,38 @@ int verificar_existencia_de_arquivo(){
   }
 }
 
+
 int verificar_existencia_da_palavra(char *palavra_inserida){
-  FILE *dicionario;
+  
+  // Declaração de um vetor de caracteres de tamanho 46.
   char palavra_existente[46];
-  dicionario=fopen("dicionario.txt","r");
-  while(fscanf(dicionario,"%s %*[^\n]", palavra_existente)!=EOF){// só ve a palavra ignora significado
+
+  // Abertura do arquivo de texto do dicionário e atribuição deste para váriavl global do tipo FILE.
+  arquivo_dicionario=fopen("dicionario.txt","r");
+
+  //Realiza a leitura do arquivo de texto do dicionário, até o seu fim, só armazenando o primeiro string da linha. Ou seja, só as palavras são guardadas, ignorando, desse modo, os significados, que coexistem pela formatação utilizada nas mesmas linhas.
+  while(fscanf(arquivo_dicionario,"%s %*[^\n]", palavra_existente)!=EOF){
+
+      //Realiza a comparação da palavra endereçada pelo ponteiro do tipo char com a palavra lida do dicionário. Caso as palavras sejam iguais, fecha o arquivo e retorna 1. Caso contrário, fecha o arquivo e retorna 0, indicando que não existe uma palavra no dicionário igual a inserida pelo usuário.
       if (strcmp(palavra_existente, palavra_inserida)==0){
-        fclose(dicionario);
+        fclose(arquivo_dicionario);
         return 1;
       }
     }
-  fclose(dicionario);
+  fclose(arquivo_dicionario);
   return 0;
 }
 
+// Realiza a formatação da palavra enderaçada pelo ponteiro, transformando todos os caracteres em minúsculas, por meio do uso da tabela ASCII.
 void normalizar_palavra(char *palavra){
    for (int i = 0; i<strlen(palavra); i++){
     if (palavra[i] >= 65 && palavra[i] <= 90){
       palavra[i] = palavra[i] + 32; 
     }
-  }///normaliza a palavra 
+  }
 } 
 
+// Realiza a exibição da forca de acordo com a quantidade de erros recebidos.
 void exibir_forca(int erros){
   switch (erros){
     case 0:
@@ -548,18 +615,30 @@ void exibir_forca(int erros){
   }
 }
 
+
 void retornar_menu(){
+
+  //Exibe a mensagem solicitando o pressionamento de qualquer tecla para retornar para o Menu de Opções Principal.
   printf("\nPressione Qualquer Tecla para Retornar para o Menu de Opções Principal.\n");
+
+  //Recebe qualquer caractere do usuário.
   getchar();
 }
 
 void string_verde_negrito(char *string){
+ 
+  // Altera a cor de exibição do texto para verde em negrito.
   printf("\033[1;32m");
+
+  // Exibe o texto endereçado pelo ponteiro recebido.
   printf("%s",string);
+
+  // Redefine a cor de exibição para o padrão.
   printf("\033[0m");
 }
 
 void string_verde_negrito_sublinhado(char *string){
+  
   printf("\033[4;32m");
   printf("\033[1;32m");
   printf("%s",string);
