@@ -638,23 +638,44 @@ void string_verde_negrito(char *string){
 }
 
 void string_verde_negrito_sublinhado(char *string){
-  
+
+   // Altera a cor de exibição do texto para verde sublinhado.
   printf("\033[4;32m");
+  
+  // Altera a cor de exibição do texto para verde em negrito.
   printf("\033[1;32m");
+
+  // Exibe o texto endereçado pelo ponteiro recebido.
   printf("%s",string);
+
+  // Redefine a cor de exibição para o padrão.
   printf("\033[0m");
 }
 
 void string_vermelha_negrito(char *string){
+  
+  // Altera a cor de exibição do texto para vermelho em negrito.
   printf("\033[1;31m");
+  
+  // Exibe o texto endereçado pelo ponteiro recebido.
   printf("%s",string);
+
+  // Redefine a cor de exibição para o padrão.
   printf("\033[0m");
 }
 
 void string_vermelha_negrito_sublinhado(char *string){
+
+  // Altera a cor de exibição do texto para vermelho sublinhado.
   printf("\033[4;31m");
+
+  // Altera a cor de exibição do texto para vermelho em negrito.
   printf("\033[1;31m");
+  
+   // Exibe o texto endereçado pelo ponteiro recebido.
   printf("%s",string);
+
+  // Redefine a cor de exibição para o padrão.
   printf("\033[0m");
 }
 
